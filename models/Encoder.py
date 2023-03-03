@@ -85,3 +85,40 @@ class Encoder(nn.Module):
         y_7 = self.middle(y_6)
 
         return y_1, y_2, y_3, y_4, y_5, y_7
+
+class RefEncoder(nn.Module):
+    def __init__(self, input_nc, output_nc, ngf=64, res_num=4, norm_layer=nn.BatchNorm2d, use_dropout=False):
+        super(Encoder, self).__init__()
+
+        # construct unet structure
+        Encoder_1 = UnetSkipConnectionEBlock(input_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, outermost=True)
+        Encoder_2 = UnetSkipConnectionEBlock(ngf, ngf * 2, norm_layer=norm_layer, use_dropout=use_dropout)
+        Encoder_3 = UnetSkipConnectionEBlock(ngf * 2, ngf * 4, norm_layer=norm_layer, use_dropout=use_dropout)
+        Encoder_4 = UnetSkipConnectionEBlock(ngf * 4, ngf * 8, norm_layer=norm_layer, use_dropout=use_dropout)
+        Encoder_5 = UnetSkipConnectionEBlock(ngf * 8, ngf * 8, norm_layer=norm_layer, use_dropout=use_dropout)
+        Encoder_6 = UnetSkipConnectionEBlock(ngf * 8, ngf * 8, norm_layer=norm_layer, use_dropout=use_dropout, innermost=True)
+
+        blocks = []
+        for _ in range(res_num):
+            block = ResnetBlock(ngf * 8, 2)
+            blocks.append(block)
+
+        self.middle = nn.Sequential(*blocks)
+
+        self.Encoder_1 = Encoder_1
+        self.Encoder_2 = Encoder_2
+        self.Encoder_3 = Encoder_3
+        self.Encoder_4 = Encoder_4
+        self.Encoder_5 = Encoder_5
+        self.Encoder_6 = Encoder_6
+
+    def forward(self, input):
+        y_1 = self.Encoder_1(input)
+        y_2 = self.Encoder_2(y_1)
+        y_3 = self.Encoder_3(y_2)
+        y_4 = self.Encoder_4(y_3)
+        y_5 = self.Encoder_5(y_4)
+        y_6 = self.Encoder_6(y_5)
+        y_7 = self.middle(y_6)
+
+        return y_1, y_2, y_3, y_4, y_5, y_7
