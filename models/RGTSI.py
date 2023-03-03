@@ -5,13 +5,11 @@ from torch.autograd import Variable
 from PIL import Image
 import torch.nn.functional as F
 
-#from data import mask
 from models.base_model import BaseModel
 from models import networks
 
 from .loss import VGG16, PerceptualLoss, StyleLoss, GANLoss
 
-#Mutual Encoder Decoder with Feature Equalizations
 
 class RGTSI(BaseModel):
     def __init__(self, opt):
@@ -32,20 +30,20 @@ class RGTSI(BaseModel):
         self.Gt_ST = self.Tensor(opt.batchSize, opt.output_nc, opt.fineSize, opt.fineSize)
         self.Gt_RF = self.Tensor(opt.batchSize, opt.output_nc, opt.fineSize, opt.fineSize)
         self.input_mask_global = self.Tensor(opt.batchSize, 1, opt.fineSize, opt.fineSize)
-        #self.ex_mask = self.mask_global.expand(self.mask_global.size(0), 3, self.mask_global.size(2),self.mask_global.size(3))
-        #self.inv_ex_mask = torch.add(torch.neg(self.ex_mask.float()), 1).float()
+
+
         self.model_names = []
         if len(opt.gpu_ids) > 0:
             self.use_gpu = True
             self.vgg = self.vgg.to(self.gpu_ids[0])
             self.vgg = torch.nn.DataParallel(self.vgg, self.gpu_ids)
-        # load/define networks  EN:Encoder DE:Decoder  RGTSI: Mutual Encoder Decoder with Feature Equalizations
-        self.netEN, self.netDE, self.netRGTSI, self.stde_loss = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf, opt.norm,
+        # load/define networks  EN:Encoder  RefEN:RefEncoder  DE:Decoder  RGTSI: Reference-Guided Texture and Structure Inference
+        self.netEN, self.netRefEN, self.netDE, self.netRGTSI, self.stde_loss = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf, opt.norm,
                                                                                   opt.use_dropout, opt.init_type,
                                                                                   self.gpu_ids,
                                                                                   opt.init_gain)
 
-        self.model_names=['EN', 'DE', 'RGTSI']
+        self.model_names=[ 'EN','RefEN','DE', 'RGTSI']
 
         if self.isTrain:
 
@@ -68,6 +66,9 @@ class RGTSI(BaseModel):
 
             self.optimizer_EN = torch.optim.Adam(self.netEN.parameters(),
                                                  lr=opt.lr, betas=(opt.beta1, 0.999))
+            self.optimizer_RefEN = torch.optim.Adam(self.netRefEN.parameters(),
+                                                 lr=opt.lr, betas=(opt.beta1, 0.999))
+
             self.optimizer_DE = torch.optim.Adam(self.netDE.parameters(),
                                                  lr=opt.lr, betas=(opt.beta1, 0.999))
 
@@ -79,6 +80,7 @@ class RGTSI(BaseModel):
             self.optimizer_F = torch.optim.Adam(self.netF.parameters(),
                                                 lr=opt.lr, betas=(opt.beta1, 0.999))
             self.optimizers.append(self.optimizer_EN)
+            self.optimizers.append(self.optimizer_RefEN)
             self.optimizers.append(self.optimizer_DE)
 
             self.optimizers.append(self.optimizer_RGTSI)
@@ -89,6 +91,7 @@ class RGTSI(BaseModel):
 
             print('---------- Networks initialized -------------')
             networks.print_network(self.netEN)
+            networks.print_network(self.netRefEN)
             networks.print_network(self.netDE)
             networks.print_network(self.netRGTSI)
             if self.isTrain:
@@ -100,6 +103,7 @@ class RGTSI(BaseModel):
             if opt.continue_train :
                 print('Loading pre-trained network!')
                 self.load_networks(self.netEN, 'EN', opt.which_epoch)
+                self.load_networks(self.netRefEN, 'RefEN', opt.which_epoch)
                 self.load_networks(self.netDE, 'DE', opt.which_epoch)
                 self.load_networks(self.netRGTSI, 'RGTSI', opt.which_epoch)
                 self.load_networks(self.netD, 'D', opt.which_epoch)
@@ -144,25 +148,20 @@ class RGTSI(BaseModel):
         self.input_DE.narrow(1, 0, 1).masked_fill_(self.input_mask_global.narrow(1, 0, 1).bool(), 2 * 123.0 / 255.0 - 1.0)
         self.input_DE.narrow(1, 1, 1).masked_fill_(self.input_mask_global.narrow(1, 0, 1).bool(), 2 * 104.0 / 255.0 - 1.0)
         self.input_DE.narrow(1, 2, 1).masked_fill_(self.input_mask_global.narrow(1, 0, 1).bool(), 2 * 117.0 / 255.0 - 1.0)
-
-        self.ref_DE.narrow(1, 0, 1).masked_fill_(self.input_mask_global.narrow(1, 0, 1).bool(), 2 * 123.0 / 255.0 - 1.0)
-        self.ref_DE.narrow(1, 1, 1).masked_fill_(self.input_mask_global.narrow(1, 0, 1).bool(), 2 * 104.0 / 255.0 - 1.0)
-        self.ref_DE.narrow(1, 2, 1).masked_fill_(self.input_mask_global.narrow(1, 0, 1).bool(), 2 * 117.0 / 255.0 - 1.0)
         
-
     def forward(self):
 
         fake_input_p_1, fake_input_p_2, fake_input_p_3, fake_input_p_4, fake_input_p_5, fake_input_p_6 = self.netEN(
             torch.cat([self.input_DE, self.inv_ex_input_mask], 1))
         De_in = [fake_input_p_1, fake_input_p_2, fake_input_p_3, fake_input_p_4, fake_input_p_5, fake_input_p_6]
 
-        fake_ref_p_1, fake_ref_p_2, fake_ref_p_3, fake_ref_p_4, fake_ref_p_5, fake_ref_p_6 = self.netEN(
-            torch.cat([self.ref_DE, self.inv_ex_input_mask], 1))            
+        fake_ref_p_1, fake_ref_p_2, fake_ref_p_3, fake_ref_p_4, fake_ref_p_5, fake_ref_p_6 = self.netRefEN(self.ref_DE)
+
         Ref_in = [fake_ref_p_1,fake_ref_p_2, fake_ref_p_3, fake_ref_p_4, fake_ref_p_5, fake_ref_p_6]
 
         #De_in=[fake_p_1,fake_p_2,fake_p_3,fake_p_4,fake_p_5,fake_p_6]
-        x_out = self.netRGTSI(De_in, Ref_in,self.input_mask_global)
-        #x_out = self.netRGTSI(De_in, Ref_in,self.input_mask_global)
+        x_out = self.netRGTSI(De_in, Ref_in, self.input_mask_global)
+  
 
         #x_out返回为，图片+损失[x_1, x_2, x_3, x_4, x_5, x_6, x_ST_fi, x_DE_fi]
         self.fake_out = self.netDE(x_out[0], x_out[1], x_out[2], x_out[3], x_out[4], x_out[5])
@@ -225,6 +224,7 @@ class RGTSI(BaseModel):
         self.set_requires_grad(self.netF, True)
         self.set_requires_grad(self.netD, True)
         self.set_requires_grad(self.netEN, False)
+        self.set_requires_grad(self.netRefEN, False)
         self.set_requires_grad(self.netDE, False)
         self.set_requires_grad(self.netRGTSI, False)
         self.optimizer_D.zero_grad()
@@ -233,18 +233,21 @@ class RGTSI(BaseModel):
         self.optimizer_D.step()
         self.optimizer_F.step()
 
-        # Optimize EN, DE, MEDEF
+        # Optimize EN, RefEN, DE, MEDEF
         self.set_requires_grad(self.netF, False)
         self.set_requires_grad(self.netD, False)
         self.set_requires_grad(self.netEN, True)
+        self.set_requires_grad(self.netRefEN, True)
         self.set_requires_grad(self.netDE, True)
         self.set_requires_grad(self.netRGTSI, True)
         self.optimizer_EN.zero_grad()
+        self.optimizer_RefEN.zero_grad()
         self.optimizer_DE.zero_grad()
         self.optimizer_RGTSI.zero_grad()
         self.backward_G()
         self.optimizer_RGTSI.step()
         self.optimizer_EN.step()
+        self.optimizer_RefEN.step()
         self.optimizer_DE.step()
 
     def get_current_errors(self):
