@@ -84,7 +84,7 @@ def define_G(input_nc, output_nc, ngf,  norm='batch', use_dropout=False, init_ty
     
     PCBlock = PCblock(stde_list)
 
-    return init_net(netEN, init_type, init_gain, gpu_ids),init_net(netRefEN, init_type, init_gain, gpu_ids), init_net(netDE, init_type, init_gain, gpu_ids), init_net(PCBlock, init_type, init_gain, gpu_ids),stde_list
+    return init_net(netEN, init_type, init_gain, gpu_ids), init_net(netRefEN, init_type, init_gain, gpu_ids), init_net(netDE, init_type, init_gain, gpu_ids), init_net(PCBlock, init_type, init_gain, gpu_ids),stde_list
 
 
 def define_D(input_nc, ndf, n_layers_D=3, norm='batch',  init_type='normal', gpu_ids=[], init_gain=0.02):
