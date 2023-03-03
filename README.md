@@ -22,8 +22,6 @@ pip install -r requirements.txt
 
 ## Dataset Preparation
 
-Please download **DPED10K** dataset from [Google Netdisk](https://pan.baidu.com/s/17HmDXmStYRhAErpYjLFkJA),
-
 Our model is trained on the irregular mask dataset provided by [Liu et al](https://arxiv.org/abs/1804.07723). You can download publically available Irregular Mask Dataset from their [website](http://masc.cs.gmu.edu/wiki/partialconv).
 
 For Structure image of datasets, we follow the [Structure flow](https://github.com/RenYurui/StructureFlow) and utlize the [RTV smooth method](http://www.cse.cuhk.edu.hk/~leojia/projects/texturesep/).Run generation function [data/Matlab/generate_structre_images.m](./data/Matlab/generate_structure_images.m) in your matlab. For example, if you want to generate smooth images for Places2, you can run the following code:
@@ -31,7 +29,6 @@ For Structure image of datasets, we follow the [Structure flow](https://github.c
 ```
 generate_structure_images("path to dataset root", "path to output folder");
 ```
-
 
 ## Training New Models
 ```bash
@@ -45,12 +42,10 @@ For the current version, the batchsize needs to be set to 1.
 To log training, use `--./logs` for Tensorboard. The logs are stored at `logs/[name]`.
 
 ## Pre-trained weights and test model
- You can download the pre-trained model [here](https://drive.google.com/drive/folders/1uLC9YN_34mLod5kIE1nMb9P5L40Iqbkp?usp=sharing)，and unzip it to `checkpoints`
-
-## Thanks
+I will re-train our model and update the parameters soon.
 
 ## Citation
-If you use this code for your research, please cite our papers.
+If you use this code or dataset for your research, please cite our papers.
 ```
 @inproceedings{RGTSI,
   title={Reference-guided texture and structure inference for image inpainting},
@@ -60,3 +55,6 @@ If you use this code for your research, please cite our papers.
   year={2022},
 }
 ```
+
+## Acknowledgments
+RGTSI is bulit upon the [MEDFE](https://github.com/KumapowerLIU/Rethinking-Inpainting-MEDFE) and inspired by [SSEN](https://github.com/Slime0519/CVPR_2020_SSEN). We appreciate the authors' excellent work!
