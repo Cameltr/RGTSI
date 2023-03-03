@@ -25,7 +25,7 @@ class Dynamic_offset_estimator(nn.Module):
         halfscale_feature = self.downblock1(x)#1/2
         quarterscale_feature = self.downblock2(halfscale_feature)#1/4
         octascale_feature = self.downblock3(quarterscale_feature)#1/8
-        #octascale_feature = self.downblock1(x)#1/8
+        
 
         octascale_NLout = self.attentionblock1(octascale_feature)
         octascale_NLout = torch.add(octascale_NLout, octascale_feature)
@@ -40,7 +40,7 @@ class Dynamic_offset_estimator(nn.Module):
         halfscale_upsampled = self.upblock3(halfscale_NLout)
 
         out = self.channelscaling_block(halfscale_upsampled)
-        #out = self.channelscaling_block(octascale_upsampled)
+        
         return out
 
 
