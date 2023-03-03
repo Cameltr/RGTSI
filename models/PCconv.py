@@ -382,7 +382,5 @@ class PCconv(nn.Module):
         x_5 = self.down_8(x_ST) + input[4]
         x_6 = self.down_4(x_ST) + input[5]
 
-        #out = [x_1, x_2, x_3, x_4, x_5, x_6]
-        #loss = [x_ST_fi, x_DE_fi]
         out_final = [x_1, x_2, x_3, x_4, x_5, x_6, x_ST_fi, x_DE_fi]
         return out_final
