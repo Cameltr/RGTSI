@@ -13,7 +13,6 @@ class BaseOptions():
         parser.add_argument('--de_root', type=str, default=r'./data/datasets/images', help='path to detail images (which are the groundtruth)')
         parser.add_argument('--input_mask_root', type=str, default=r'./data/datasets/input_mask', help='path to mask, we use the datasetsets of partial conv hear')
         parser.add_argument('--ref_root', type=str, default=r'./data/datasets/reference', help='path to mask, we use the datasetsets of partial conv hear')
-        parser.add_argument('--ref_mask_root', type=str, default=r'./data/datasets/ref_mask', help='path to structure images')
         parser.add_argument('--batchSize', type=int, default=1, help='input batch size')
         parser.add_argument('--num_workers', type=int, default=8, help='numbers of the core of CPU')
         parser.add_argument('--name', type=str, default='RBED',
