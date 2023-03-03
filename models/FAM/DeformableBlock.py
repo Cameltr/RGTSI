@@ -16,15 +16,12 @@ class DeformableConvBlock(nn.Module):
                                        padding=1, bias=False)
 
     def forward(self, input_features, reference_features):
-        #showpatch(input_features, foldername="input_de", modelname="FAM")
-        #showpatch(reference_features, foldername="ref_de", modelname="FAM")
+        
         input_offset = torch.cat((input_features, reference_features), dim=1)
         estimated_offset = self.offset_estimator(input_offset)
-        #showpatch(estimated_offset, foldername="offsetinput1",modelname = "FAM")
         estimated_offset = self.offset_conv(estimated_offset)
-        #showpatch(estimated_offset, foldername="offsetinput2",modelname = "FAM")
         output = self.deformconv(x=reference_features, offset=estimated_offset)
-        #showpatch(input_offset, foldername="output",modelname = "FAM")
+        
 
         return output
         # 返回aligned feature
