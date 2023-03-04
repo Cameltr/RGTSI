@@ -88,10 +88,10 @@ class Encoder(nn.Module):
 
 class RefEncoder(nn.Module):
     def __init__(self, input_nc, output_nc, ngf=64, res_num=4, norm_layer=nn.BatchNorm2d, use_dropout=False):
-        super(Encoder, self).__init__()
+        super(RefEncoder, self).__init__()
 
         # construct unet structure
-        Encoder_1 = UnetSkipConnectionEBlock(input_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, outermost=True)
+        Encoder_1 = UnetSkipConnectionEBlock(3, ngf, norm_layer=norm_layer, use_dropout=use_dropout, outermost=True)
         Encoder_2 = UnetSkipConnectionEBlock(ngf, ngf * 2, norm_layer=norm_layer, use_dropout=use_dropout)
         Encoder_3 = UnetSkipConnectionEBlock(ngf * 2, ngf * 4, norm_layer=norm_layer, use_dropout=use_dropout)
         Encoder_4 = UnetSkipConnectionEBlock(ngf * 4, ngf * 8, norm_layer=norm_layer, use_dropout=use_dropout)
