@@ -34,21 +34,21 @@ if __name__ == "__main__":
     writer = SummaryWriter(log_dir=dir, comment=opt.name)
     model = create_model(opt)
 
-    net_EN = torch.load("./checkpoints/RBED/70_net_EN.pth")
-    net_DE = torch.load("./checkpoints/RBED/70_net_DE.pth")
-    net_RGTSI = torch.load("./checkpoints/RBED/70_net_RGTSI.pth")
+    net_EN = torch.load("./checkpoints/RGTSI/70_net_EN.pth")
+    net_DE = torch.load("./checkpoints/RGTSI/70_net_DE.pth")
+    net_RGTSI = torch.load("./checkpoints/RGTSI/70_net_RGTSI.pth")
 
     model.netEN.module.load_state_dict(net_EN['net'])
     model.netDE.module.load_state_dict(net_DE['net'])
     model.netRGTSI.module.load_state_dict(net_RGTSI['net'])
 
-    input_mask_paths = glob('{:s}/*'.format("/project/liutaorong/Reference_inpainting/test/input_mask/3/"))
+    input_mask_paths = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/input_mask/3/"))
     input_mask_paths.sort()
-    de_paths = glob('{:s}/*'.format("/project/liutaorong/Reference_inpainting/test/images/"))
+    de_paths = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/images/"))
     de_paths.sort()
-    st_path = glob('{:s}/*'.format("/project/liutaorong/Reference_inpainting/test/structure/"))
+    st_path = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/structure/"))
     st_path.sort()
-    ref_paths = glob('{:s}/*'.format("/project/liutaorong/Reference_inpainting/test/reference/"))
+    ref_paths = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/reference/"))
     ref_paths.sort()
 
     image_len = len(de_paths)
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             fake_image = (fake_out+1)/2.0
         output = fake_image.detach().numpy()[0].transpose((1, 2, 0))*255
         output = Image.fromarray(output.astype(np.uint8))
-        output.save("/project/liutaorong/Reference_inpainting/result/"+filename+".jpg")
+        output.save(results_dir+filename+".jpg")
         
         input, reference, output, GT = model.get_current_visuals()
         image_out = torch.cat([input,reference,output,GT], 0)
