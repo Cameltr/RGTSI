@@ -10,7 +10,7 @@ class DataProcess(torch.utils.data.Dataset):
     def __init__(self, de_root, st_root, input_mask_root,ref_root,opt, train=True):
         super(DataProcess, self).__init__()
         self.img_transform = transforms.Compose([
-            transforms.Resize(opt.fineSize),
+            transforms.Resize((opt.fineSize,opt.fineSize)),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))
         ])
