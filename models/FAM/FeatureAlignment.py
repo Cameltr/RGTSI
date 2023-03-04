@@ -7,7 +7,7 @@ from util.util import showpatch
 class FAM(nn.Module):
     def __init__(self,in_channels):
         super(FAM, self).__init__()
-        self.deformblock = DeformableConvBlock(input_channelsize= in_channels)
+        self.deformblock = DeformableConvBlock(input_channels= in_channels)
         
         #对齐了两次次
     def forward(self,ist_feature, rst_feature):
