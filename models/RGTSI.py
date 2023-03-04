@@ -209,10 +209,9 @@ class RGTSI(BaseModel):
 
         
         self.stde_loss_value = 0
-        print(dir(self.stde_loss[0]))
         
         for loss in self.stde_loss:
-            print(self.stde_loss)
+            
             self.stde_loss_value += loss.backward()
             self.stde_loss_value += loss.loss
         self.loss_G += self.stde_loss_value
