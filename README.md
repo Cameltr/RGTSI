@@ -21,9 +21,9 @@ conda activate RGTSI
 pip install -r requirements.txt
 ```
 
-## Dataset Preparation
+### Dataset Preparation
 
-Please download DPED10K dataset from [Baidu Netdisk](https://pan.baidu.com/s/1dYxYyb7m7-3hG_T9S21jUA) (Password: p9xn).
+Please download DPED10K dataset from [Baidu Netdisk](https://pan.baidu.com/s/1dYxYyb7m7-3hG_T9S21jUA) (Password: p9xn). Create a folder and unzip the dataset into it, then edit the pathes of the folder in `options/base_options.py`
 
 Our model is trained on the irregular mask dataset provided by [Liu et al](https://arxiv.org/abs/1804.07723). You can download publically available Irregular Mask Dataset from their [website](http://masc.cs.gmu.edu/wiki/partialconv).
 
@@ -33,7 +33,7 @@ For Structure image of datasets, we follow the [Structure flow](https://github.c
 generate_structure_images("path to dataset root", "path to output folder");
 ```
 
-## Training New Models
+### Training and Testing
 ```bash
 # To train on the you dataset, for example.
 python train.py --st_root=[the path of structure images] --de_root=[the path of ground truth images] --input_mask_root=[the path of mask images] --ref_root=[the path of reference images]
@@ -44,7 +44,13 @@ For the current version, the batchsize needs to be set to 1.
 
 To log training, use `--./logs` for Tensorboard. The logs are stored at `logs/[name]`.
 
-## Pre-trained weights and test model
+```bash
+# To test on the your dataset, for example.
+python test.py  
+```
+Please edit the the path of test images in `test.py` when testing on your dataset.
+
+### Pre-trained weights and test model
 I will re-train our model and update the parameters soon.
 
 ## Citation
