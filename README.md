@@ -1,5 +1,6 @@
 # Reference-Guided Texture and Structure Inference for Image Inpainting
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=Cameltr/RGTSI)
+[![paper](https://img.shields.io/badge/IEEE-Paper-red)](https://ieeexplore.ieee.org/abstract/document/9897592)
 
 
  This is the repository of the paper **Reference-Guided Texture and Structure Inference for Image Inpainting**, accepted by [ICIP 2022](https://2022.ieeeicip.org/).
@@ -22,6 +23,8 @@ pip install -r requirements.txt
 
 ## Dataset Preparation
 
+Please download DPED10K dataset from [Baidu Netdisk](https://pan.baidu.com/s/1dYxYyb7m7-3hG_T9S21jUA) (Password: p9xn).
+
 Our model is trained on the irregular mask dataset provided by [Liu et al](https://arxiv.org/abs/1804.07723). You can download publically available Irregular Mask Dataset from their [website](http://masc.cs.gmu.edu/wiki/partialconv).
 
 For Structure image of datasets, we follow the [Structure flow](https://github.com/RenYurui/StructureFlow) and utlize the [RTV smooth method](http://www.cse.cuhk.edu.hk/~leojia/projects/texturesep/).Run generation function [data/Matlab/generate_structre_images.m](./data/Matlab/generate_structure_images.m) in your matlab. For example, if you want to generate smooth images for Places2, you can run the following code:
@@ -33,7 +36,7 @@ generate_structure_images("path to dataset root", "path to output folder");
 ## Training New Models
 ```bash
 # To train on the you dataset, for example.
-python train.py --st_root=[the path of structure images] --de_root=[the path of ground truth images] --mask_root=[the path of mask images]
+python train.py --st_root=[the path of structure images] --de_root=[the path of ground truth images] --input_mask_root=[the path of mask images] --ref_root=[the path of reference images]
 ```
 There are many options you can specify. Please use `python train.py --help` or see the options
 
@@ -47,12 +50,13 @@ I will re-train our model and update the parameters soon.
 ## Citation
 If you use this code or dataset for your research, please cite our papers.
 ```
-@inproceedings{RGTSI,
+@inproceedings{liu2022reference,
   title={Reference-guided texture and structure inference for image inpainting},
   author={Liu, Taorong and Liao, Liang and Wang, Zheng and Satoh, Shin’Ichi},
-  booktitle={Proc. IEEE Int. Conf. Image Process.},
+  booktitle={2022 IEEE International Conference on Image Processing (ICIP)},
   pages={1996--2000},
   year={2022},
+  organization={IEEE}
 }
 ```
 
