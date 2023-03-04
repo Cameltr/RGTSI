@@ -27,7 +27,9 @@ class UnetSkipConnectionDBlock(nn.Module):
         self.model = nn.Sequential(*model)
 
     def forward(self, x):
-        return self.model(x)
+        x=x.clone()
+        x=self.model(x)
+        return x
 
 
 
