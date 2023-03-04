@@ -366,12 +366,10 @@ class PCconv(nn.Module):
         
         x_cat = torch.cat([x_ST_fi, x_DE_fi], 1)
         x_cat_fuse = self.fuse(x_cat)
-        print(x_cat_fuse.shape)
-        showpatch(x_cat_fuse, foldername="x_cat_fuse", modelname="RBED")
+        
         # Feature equalizations
         x_final = self.base(x_cat_fuse)
-        print(x_final.shape)
-        showpatch(x_final, foldername="x_final", modelname="RBED")
+        
         # Add back to the input
         x_ST = x_final
         x_DE = x_final
