@@ -79,7 +79,7 @@ def define_G(input_nc, output_nc, ngf,  norm='batch', use_dropout=False, init_ty
 
     stde_list = []
     netEN = Encoder(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout)
-    netRefEN = RefEncoder(input_nc / 2, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout)
+    netRefEN = RefEncoder(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout)
     netDE = Decoder(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout)
     
     PCBlock = PCblock(stde_list)
