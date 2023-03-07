@@ -12,7 +12,7 @@ class DeformableConvBlock(nn.Module):
         self.offset_estimator =  Dynamic_offset_estimator(input_channelsize=input_channels)
         self.offset_conv = nn.Conv2d(in_channels=input_channels, out_channels=1 * 2 * 9, kernel_size=3, padding=1,bias=False)
 
-        self.deformconv = DeformConv2d(in_channels=input_channels, out_channels=input_channels, kernel_size=3,
+        self.deformconv = DeformConv2d(in_channels=768, out_channels=768, kernel_size=3,
                                        padding=1, bias=False)
 
     def forward(self, input_features, reference_features):
