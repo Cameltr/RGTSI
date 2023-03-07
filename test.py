@@ -34,15 +34,17 @@ if __name__ == "__main__":
     writer = SummaryWriter(log_dir=dir, comment=opt.name)
     model = create_model(opt)
 
-    net_EN = torch.load("./checkpoints/RGTSI/70_net_EN.pth")
-    net_DE = torch.load("./checkpoints/RGTSI/70_net_DE.pth")
-    net_RGTSI = torch.load("./checkpoints/RGTSI/70_net_RGTSI.pth")
+    net_EN = torch.load("./checkpoints/RGTSI/net_EN.pth")
+    net_RefEN = torch.load("./checkpoints/RGTSI/net_RefEN.pth")
+    net_DE = torch.load("./checkpoints/RGTSI/net_DE.pth")
+    net_RGTSI = torch.load("./checkpoints/RGTSI/net_RGTSI.pth")
 
     model.netEN.module.load_state_dict(net_EN['net'])
+    model.netRefEN.module.load_state_dict(net_EN['net'])
     model.netDE.module.load_state_dict(net_DE['net'])
     model.netRGTSI.module.load_state_dict(net_RGTSI['net'])
 
-    input_mask_paths = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/input_mask/3/"))
+    input_mask_paths = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/input_mask/"))
     input_mask_paths.sort()
     de_paths = glob('{:s}/*'.format("/project/liutaorong/RGTSI/data/DPED10K/test/images/"))
     de_paths.sort()
@@ -54,13 +56,13 @@ if __name__ == "__main__":
     image_len = len(de_paths)
 
     for i in tqdm(range(image_len)):
-        # only use one mask for all image
-        path_im = input_mask_paths[11]
-        path_de = de_paths[11]
+        
+        path_im = input_mask_paths[i]
+        path_de = de_paths[i]
         (filepath,tempfilename) = os.path.split(path_de)
         (filename,extension) = os.path.splitext(tempfilename)
-        path_st = st_path[11]
-        path_rf = ref_paths[0]
+        path_st = st_path[i]
+        path_rf = ref_paths[i]
         
         input_mask = Image.open(path_im).convert("RGB")
         detail = Image.open(path_de).convert("RGB")
