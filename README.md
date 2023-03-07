@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 ### Dataset Preparation
 
-Please download DPED10K dataset from [Baidu Netdisk](https://pan.baidu.com/s/1dYxYyb7m7-3hG_T9S21jUA) (Password: p9xn). Create a folder and unzip the dataset into it, then edit the pathes of the folder in `options/base_options.py`
+Please download DPED10K dataset from [Baidu Netdisk](https://pan.baidu.com/s/18mwRhUdKsKaL6J-08mdlLQ) (Password: roqs). Create a folder and unzip the dataset into it, then edit the pathes of the folder in `options/base_options.py`
 
 Our model is trained on the irregular mask dataset provided by [Liu et al](https://arxiv.org/abs/1804.07723). You can download publically available Irregular Mask Dataset from their [website](http://masc.cs.gmu.edu/wiki/partialconv).
 
@@ -51,7 +51,8 @@ python test.py
 Please edit the the path of test images in `test.py` when testing on your dataset.
 
 ### Pre-trained weights and test model
-I will re-train our model and update the parameters soon.
+Download pretrained models [here](https://pan.baidu.com/s/1Oh4cqFNgJorOjdxDAugkng) (Password: bb0j).
+
 
 ## Citation
 If you use this code or dataset for your research, please cite our papers.
