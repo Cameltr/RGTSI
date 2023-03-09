@@ -51,7 +51,7 @@ python test.py
 Please edit the the path of test images in `test.py` when testing on your dataset.
 
 ### Pre-trained weights and test model
-Download pretrained models [here](https://pan.baidu.com/s/1Oh4cqFNgJorOjdxDAugkng) (Password: bb0j).
+Download pretrained models from [Google Drive](https://drive.google.com/drive/folders/1nBFG6EAQTW-G55Nh4YwFaiU_gnIo8Qks?usp=share_link) or [Baidu Netdisk](https://pan.baidu.com/s/1Oh4cqFNgJorOjdxDAugkng) (Password: bb0j).
 
 
 ## Citation
