@@ -55,7 +55,7 @@ Download pretrained models from [Google Drive](https://drive.google.com/drive/fo
 
 
 ## Citation
-If you use this code or dataset for your research, please cite our papers.
+If you find our code or datasets helpful for your research, please cite our paper.
 ```
 @inproceedings{liu2022reference,
   title={Reference-guided texture and structure inference for image inpainting},
