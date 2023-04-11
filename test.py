@@ -40,7 +40,7 @@ if __name__ == "__main__":
     net_RGTSI = torch.load("./checkpoints/RGTSI/net_RGTSI.pth")
 
     model.netEN.module.load_state_dict(net_EN['net'])
-    model.netRefEN.module.load_state_dict(net_EN['net'])
+    model.netRefEN.module.load_state_dict(net_RefEN['net'])
     model.netDE.module.load_state_dict(net_DE['net'])
     model.netRGTSI.module.load_state_dict(net_RGTSI['net'])
 
