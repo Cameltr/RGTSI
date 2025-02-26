@@ -1,5 +1,4 @@
-# Reference-Guided Texture and Structure Inference for Image Inpainting
-![visitors](https://visitor-badge.glitch.me/badge?page_id=Cameltr/RGTSI)
+# [ICIP 2022] Reference-Guided Texture and Structure Inference for Image Inpainting
 [![paper](https://img.shields.io/badge/IEEE-Paper-red)](https://ieeexplore.ieee.org/abstract/document/9897592)
 
 
